@@ -15,7 +15,7 @@ function* fetchSongsSaga() {
     );
     
     yield put(fetchSongsSuccess(response.data));
-     console.log("Songs fetched:", response.data);
+    
   } catch (error) {
     console.error("Error fetching songs:", error);
     yield put(fetchSongsFailure(error.message));

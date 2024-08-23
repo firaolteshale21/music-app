@@ -31,7 +31,11 @@ function TestSongs() {
   };
 
   const handleUpdateSong = () => {
-    dispatch(updateSong({ id: updateInfo.id, title: updateInfo.title }));
+    const simulatedUpdate = {
+      id: Number(updateInfo.id),
+      title: updateInfo.title,
+    };
+    dispatch(updateSong(simulatedUpdate));
     setUpdateInfo({ id: "", title: "" });
   };
 
