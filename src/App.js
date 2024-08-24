@@ -1,11 +1,14 @@
 import React from "react";
-import TestSongs from "./components/TestSongs"; // Import the test component
+import SongList from "./components/SongList";
+import AddSongForm from "./components/AddSongForm";
+import UpdateSongForm from "./components/UpdateSongForm";
 
 function App() {
   return (
     <div className="App">
-      <h1>Test Songs</h1>
-      <TestSongs />
+      <SongList />
+      <AddSongForm />
+      <UpdateSongForm />
     </div>
   );
 }
