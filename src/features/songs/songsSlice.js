@@ -14,7 +14,8 @@ const songsSlice = createSlice({
   },
   reducers: {
     addSong: (state, action) => {
-      state.list.push(action.payload);
+      const newSong = action.payload;
+      return [newSong, ...state]; // Prepend the new song to the array
     },
     removeSong: (state, action) => {
       state.list = state.list.filter((song) => song.id !== action.payload);
@@ -24,7 +25,7 @@ const songsSlice = createSlice({
         (song) => song.id === action.payload.id
       );
       if (index !== -1) {
-        state.list[index] = action.payload
+        state.list[index] = action.payload;
       }
     },
   },
