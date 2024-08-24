@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updateSong } from "../features/songs/songsSlice";
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react"; // Import css from @emotion/react
+import { css } from "@emotion/react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const containerStyle = css`
   background-color: #1e1e1e;
@@ -47,6 +49,7 @@ const buttonStyle = css`
 function UpdateSongForm() {
   const [updateInfo, setUpdateInfo] = useState({ id: "", title: "" });
   const dispatch = useDispatch();
+  const songs = useSelector((state) => state.songs.list); // Access the list of songs from Redux
 
   const handleUpdateSong = async () => {
     if (!updateInfo.id || !updateInfo.title) {
@@ -64,20 +67,36 @@ function UpdateSongForm() {
       return;
     }
 
-    const updatedSong = { id: updateInfo.id, title: updateInfo.title };
-    const response = await fetch(
-      `https://jsonplaceholder.typicode.com/posts/${updatedSong.id}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedSong),
+    // Check if the song exists locally in Redux
+    const localSong = songs.find((song) => song.id === +updateInfo.id);
+
+    if (localSong) {
+      // Update the song's title locally
+      const updatedSong = { ...localSong, title: updateInfo.title };
+      dispatch(updateSong(updatedSong));
+      setUpdateInfo({ id: "", title: "" }); // Reset input fields
+      toast.success("Song updated successfully!"); // Show success toast
+    } else {
+      // Fetch the song from the API if it doesn't exist locally
+      const response = await fetch(
+        `https://jsonplaceholder.typicode.com/posts/${updateInfo.id}`
+      );
+
+      if (!response.ok) {
+        alert("Failed to fetch the song. Please check the song ID.");
+        return;
       }
-    );
-    const data = await response.json();
-    dispatch(updateSong(data)); // Dispatch update action with updated song
-    setUpdateInfo({ id: "", title: "" }); // Reset input fields
+
+      const existingSong = await response.json();
+
+      // Update the song's properties locally
+      const updatedSong = { ...existingSong, title: updateInfo.title };
+
+      // Dispatch an action to update the song in the Redux store
+      dispatch(updateSong(updatedSong));
+      setUpdateInfo({ id: "", title: "" }); // Reset input fields
+      toast.success("Song updated successfully!"); // Show success toast
+    }
   };
 
   return (

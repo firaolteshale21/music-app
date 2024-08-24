@@ -5,17 +5,20 @@ export const fetchSongs = createAction("songs/fetchSongs");
 export const fetchSongsSuccess = createAction("songs/fetchSongsSuccess");
 export const fetchSongsFailure = createAction("songs/fetchSongsFailure");
 
+
 const songsSlice = createSlice({
   name: "songs",
   initialState: {
     list: [],
     loading: false,
     error: null,
+    currentPage: 1, // Start on page 1
+    totalPages: 1, // Initialize with 1, will be updated based on API response
   },
   reducers: {
     addSong: (state, action) => {
       const newSong = action.payload;
-      return [newSong, ...state]; // Prepend the new song to the array
+      state.list.unshift(newSong); // Prepend the new song to the list array
     },
     removeSong: (state, action) => {
       state.list = state.list.filter((song) => song.id !== action.payload);
@@ -28,6 +31,9 @@ const songsSlice = createSlice({
         state.list[index] = action.payload;
       }
     },
+    setCurrentPage: (state, action) => {
+      state.currentPage = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -36,7 +42,8 @@ const songsSlice = createSlice({
       })
       .addCase(fetchSongsSuccess, (state, action) => {
         state.loading = false;
-        state.list = action.payload;
+        state.list = action.payload.songs;
+        state.totalPages = action.payload.totalPages;
       })
       .addCase(fetchSongsFailure, (state, action) => {
         state.loading = false;
@@ -45,6 +52,6 @@ const songsSlice = createSlice({
   },
 });
 
-export const { addSong, removeSong, updateSong } = songsSlice.actions;
+export const { addSong, removeSong, updateSong, setCurrentPage } =
+  songsSlice.actions;
 export default songsSlice.reducer;
-  
