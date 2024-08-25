@@ -14,7 +14,21 @@ function FavoriteSongs() {
   const favoriteSongs = songs.filter((song) => favorites.includes(song.id));
 
   if (favoriteSongs.length === 0) {
-    return <h2>No favorite songs.</h2>;
+    return (
+      <h2>
+        No favorite songs.
+        <img
+          src={require("../images/StarBeforePress.png")}
+          alt="Favorite"
+          css={css`
+            width: 24px;
+            height: 24px;
+            filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
+            transform: translateY(3.2px);
+          `}
+        />
+      </h2>
+    );
 
   }
 
@@ -25,8 +39,19 @@ function FavoriteSongs() {
           color: lightblue;
         `}
       >
-        Favorite Songs
+        Favorite Songs 
+        <img
+          src={require("../images/AfterPress.png")}
+          alt="Favorite"
+          css={css`
+            width: 24px;
+            height: 24px;
+            filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
+            transform: translateY(3.2px);
+          `}
+        />
       </h2>
+
       <ul
         css={css`
           list-style: none;
