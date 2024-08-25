@@ -8,6 +8,7 @@ import UpdateSongForm from "./components/UpdateSongForm";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import FavoriteSongs from "./components/FavoriteSongs";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -31,10 +32,10 @@ function App() {
         >
           <FavoriteSongs />
         </aside>
-
         <main
           style={{
             gridColumn: "2 / 3",
+            paddingBottom: "0px",
             padding: "1rem",
             color: theme.colors.textPrimary,
             overflowY: "auto",
@@ -44,7 +45,6 @@ function App() {
         >
           <SongList />
         </main>
-
         <aside
           style={{
             gridColumn: "3 / 4",
@@ -62,6 +62,7 @@ function App() {
         </aside>
         <ToastContainer autoClose={1000} />
       </div>
+      <Footer />
     </ThemeProvider>
   );
 }
