@@ -1,6 +1,11 @@
 import { useSelector, useDispatch } from "react-redux";
 import React, { useEffect } from "react";
-import { fetchSongs, removeSong } from "../features/songs/songsSlice";
+import {
+  fetchSongs,
+  removeSong,
+  addFavorite,
+  removeFavorite,
+} from "../features/songs/songsSlice";
 
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
@@ -15,34 +20,13 @@ function SongList() {
     loading,
     currentPage,
     totalPages,
+    favorites,
   } = useSelector((state) => state.songs);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchSongs());
   }, [dispatch, currentPage]);
-
-  if (loading)
-    return (
-      <h2
-        css={css`
-          color: red;
-        `}
-      >
-        <LoadingSpinner />
-      </h2>
-     
-    );
-  if (songs.length === 0)
-    return (
-      <h2
-        css={css`
-          color: red;
-        `}
-      >
-        No songs found.
-      </h2>
-    );
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -55,6 +39,37 @@ function SongList() {
       dispatch(setCurrentPage(currentPage - 1));
     }
   };
+
+  const handleFavorite = (song) => {
+    if (favorites.includes(song.id)) {
+      dispatch(removeFavorite(song.id));
+      toast.success("Song removed from favorites!");
+    } else {
+      dispatch(addFavorite(song.id));
+      toast.success("Song added to favorites!");
+    }
+  };
+
+  if (loading)
+    return (
+      <h2
+        css={css`
+          color: red;
+        `}
+      >
+        <LoadingSpinner />
+      </h2>
+    );
+  if (songs.length === 0)
+    return (
+      <h2
+        css={css`
+          color: red;
+        `}
+      >
+        No songs found.
+      </h2>
+    );
 
   return (
     <div>
@@ -69,8 +84,8 @@ function SongList() {
           src={require("../images/mLogo.png")}
           alt="Music note"
           css={css`
-            width: 34px;
-            height: 34px;
+            width: 24px; /* Increased width */
+            height: 24px;
             margin-right: 10px;
             filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
             opacity: 0.8;
@@ -100,34 +115,59 @@ function SongList() {
             `}
           >
             (Song ID: {song.id}) {song.title}
-            <button
-              css={css`
-                background-color: #d32f2f;
-                color: white;
-                border: none;
-                padding: 0.5rem 1rem;
-                border-radius: 8px;
-                cursor: pointer;
+            <div>
+              <button
+                css={css`
+                  background-color: #d32f2f;
+                  color: white;
+                  border: none;
+                  padding: 0.5rem 1rem;
+                  border-radius: 8px;
+                  cursor: pointer;
 
-                &:hover {
-                  background-color: #c62828;
-                  scale: 1.1;
-                }
-              `}
-              onClick={() => {
-                fetch(
-                  `https://jsonplaceholder.typicode.com/albums/${song.id}`,
-                  {
-                    method: "DELETE",
+                  &:hover {
+                    background-color: #c62828;
+                    scale: 1.1;
                   }
-                ).then(() => {
-                  dispatch(removeSong(song.id));
-                  toast.success("Song removed successfully!");
-                });
-              }}
-            >
-              Remove
-            </button>
+                `}
+                onClick={() => {
+                  fetch(
+                    `https://jsonplaceholder.typicode.com/albums/${song.id}`,
+                    {
+                      method: "DELETE",
+                    }
+                  ).then(() => {
+                    dispatch(removeSong(song.id));
+                    toast.success("Song removed successfully!");
+                  });
+                }}
+              >
+                Remove
+              </button>
+              <button
+                css={css`
+                  background: none;
+                  border: none;
+                  cursor: pointer;
+                  margin-left: 10px;
+                `}
+                onClick={() => handleFavorite(song)}
+              >
+                <img
+                  src={
+                    favorites.includes(song.id)
+                      ? require("../images/AfterPress.png")
+                      : require("../images/StarBeforePress.png")
+                  }
+                  alt="Favorite"
+                  css={css`
+                    width: 24px;
+                    height: 24px;
+                    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
+                  `}
+                />
+              </button>
+            </div>
           </li>
         ))}
       </ul>

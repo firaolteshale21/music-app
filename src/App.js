@@ -7,6 +7,7 @@ import AddSongForm from "./components/AddSongForm";
 import UpdateSongForm from "./components/UpdateSongForm";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import FavoriteSongs from "./components/FavoriteSongs";
 
 function App() {
   return (
@@ -28,7 +29,7 @@ function App() {
             padding: "1rem",
           }}
         >
-          <h2>Favorite Component</h2>
+          <FavoriteSongs />
         </aside>
 
         <main

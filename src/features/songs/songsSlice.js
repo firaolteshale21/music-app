@@ -5,15 +5,15 @@ export const fetchSongs = createAction("songs/fetchSongs");
 export const fetchSongsSuccess = createAction("songs/fetchSongsSuccess");
 export const fetchSongsFailure = createAction("songs/fetchSongsFailure");
 
-
 const songsSlice = createSlice({
   name: "songs",
   initialState: {
-    list: [],
+    list: [], // List of all songs
     loading: false,
     error: null,
     currentPage: 1, // Start on page 1
     totalPages: 1, // Initialize with 1, will be updated based on API response
+    favorites: [], // Array to store favorite song IDs
   },
   reducers: {
     addSong: (state, action) => {
@@ -30,6 +30,16 @@ const songsSlice = createSlice({
       if (index !== -1) {
         state.list[index] = action.payload;
       }
+    },
+    addFavorite: (state, action) => {
+      const songId = action.payload; // Expecting just the song ID
+      if (!state.favorites.includes(songId)) {
+        state.favorites.push(songId); // Add the song ID to favorites
+      }
+    },
+    removeFavorite: (state, action) => {
+      const songId = action.payload; // Expecting just the song ID
+      state.favorites = state.favorites.filter((id) => id !== songId); // Remove the song ID from favorites
     },
     setCurrentPage: (state, action) => {
       state.currentPage = action.payload;
@@ -52,6 +62,14 @@ const songsSlice = createSlice({
   },
 });
 
-export const { addSong, removeSong, updateSong, setCurrentPage } =
-  songsSlice.actions;
+export const {
+  addSong,
+  removeSong,
+  addFavorite,
+  removeFavorite,
+  setCurrentPage,
+  updateSong,
+} = songsSlice.actions;
+
 export default songsSlice.reducer;
+
