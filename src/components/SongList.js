@@ -7,6 +7,7 @@ import { css } from "@emotion/react";
 import { setCurrentPage } from "../features/songs/songsSlice";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import LoadingSpinner from "./LoadingSpinner";
 
 function SongList() {
   const {
@@ -28,8 +29,9 @@ function SongList() {
           color: red;
         `}
       >
-        Loading...
+        <LoadingSpinner />
       </h2>
+     
     );
   if (songs.length === 0)
     return (
@@ -59,8 +61,21 @@ function SongList() {
       <h1
         css={css`
           color: lightblue;
+          display: flex;
+          align-items: center;
         `}
       >
+        <img
+          src={require("../images/mLogo.png")}
+          alt="Music note"
+          css={css`
+            width: 34px;
+            height: 34px;
+            margin-right: 10px;
+            filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
+            opacity: 0.8;
+          `}
+        />
         Song List
       </h1>
       <ul

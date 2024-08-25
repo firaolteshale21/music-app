@@ -53,17 +53,17 @@ function UpdateSongForm() {
 
   const handleUpdateSong = async () => {
     if (!updateInfo.id || !updateInfo.title) {
-      alert("Please enter both ID and title.");
+      toast.warning("Please enter both ID and title.");
       return;
     }
 
     if (!Number.isInteger(+updateInfo.id)) {
-      alert("ID must be a valid integer.");
+      toast.warning("ID Must be Valid Integer.");;
       return;
     }
 
     if (updateInfo.title.length < 3) {
-      alert("Title must be at least 3 characters long.");
+    toast.warning("Title must be at least 3 characters long."); 
       return;
     }
 
