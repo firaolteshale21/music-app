@@ -6,7 +6,7 @@ const FooterContainer = styled.div`
   color: white;
   padding: 1rem;
   text-align: center;
-  position: sticky;
+  position: static;
   bottom: 0;
   width: 100%;
 
