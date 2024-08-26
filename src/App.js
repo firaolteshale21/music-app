@@ -9,53 +9,72 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import FavoriteSongs from "./components/FavoriteSongs";
 import Footer from "./components/Footer";
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 3fr 1fr",
-          gridTemplateRows: "100vh",
-          backgroundColor: theme.colors.background,
-          gap: "1rem",
-        }}
+        css={css`
+          display: grid;
+          grid-template-columns: 1fr 3fr 1fr;
+          grid-template-rows: 100vh;
+          background-color: ${theme.colors.background};
+          gap: 1rem;
+
+          @media (max-width: 768px) {
+            grid-template-columns: 1fr; /* Single column on smaller screens */
+            grid-template-rows: auto; /* Auto rows for content */
+          }
+        `}
       >
         <aside
-          style={{
-            gridColumn: "1 / 2",
-            backgroundColor: "#181818",
-            color: theme.colors.textSecondary,
-            padding: "1rem",
-          }}
+          css={css`
+            grid-column: 1 / 2;
+            background-color: #181818;
+            color: ${theme.colors.textSecondary};
+            padding: 1rem;
+
+            @media (max-width: 768px) {
+              grid-column: 1 / 2;
+            }
+          `}
         >
           <FavoriteSongs />
         </aside>
         <main
-          style={{
-            gridColumn: "2 / 3",
-            paddingBottom: "0px",
-            padding: "1rem",
-            color: theme.colors.textPrimary,
-            overflowY: "auto",
-            backgroundColor: "#252525",
-            borderRadius: "8px",
-          }}
+          css={css`
+            grid-column: 2 / 3;
+            padding-bottom: 0px;
+            padding: 1rem;
+            color: ${theme.colors.textPrimary};
+            overflow-y: auto;
+            background-color: #252525;
+            border-radius: 8px;
+
+            @media (max-width: 768px) {
+              grid-column: 1 / 2;
+            }
+          `}
         >
           <SongList />
         </main>
         <aside
-          style={{
-            gridColumn: "3 / 4",
-            backgroundColor: "#181818",
-            padding: "1rem",
-            color: theme.colors.textPrimary,
-            display: "flex",
-            flexDirection: "column",
-            gap: "1rem",
-            borderRadius: "8px",
-          }}
+          css={css`
+            grid-column: 3 / 4;
+            background-color: #181818;
+            padding: 1rem;
+            color: ${theme.colors.textPrimary};
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            border-radius: 8px;
+
+            @media (max-width: 768px) {
+              grid-column: 1 / 2;
+            }
+          `}
         >
           <AddSongForm />
           <UpdateSongForm />

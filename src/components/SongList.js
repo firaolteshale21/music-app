@@ -72,19 +72,31 @@ function SongList() {
     );
 
   return (
-    <div>
+    <div
+      css={css`
+        padding: 1rem;
+        @media (max-width: 600px) {
+          padding: 0.5rem;
+        }
+      `}
+    >
       <h1
         css={css`
           color: lightblue;
           display: flex;
           align-items: center;
+          font-size: 1.5rem;
+
+          @media (max-width: 600px) {
+            font-size: 1.2rem;
+          }
         `}
       >
         <img
           src={require("../images/mLogo.png")}
           alt="Music note"
           css={css`
-            width: 24px; /* Increased width */
+            width: 24px;
             height: 24px;
             margin-right: 10px;
             filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
@@ -112,9 +124,30 @@ function SongList() {
               justify-content: space-between;
               align-items: center;
               color: white;
+              transition: transform 0.2s;
+
+              &:hover {
+                transform: scale(1.02);
+              }
+
+              @media (max-width: 600px) {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 0.75rem;
+              }
             `}
           >
-            (Song ID: {song.id}) {song.title}
+            <span
+              css={css`
+                margin-bottom: 0.5rem;
+
+                @media (min-width: 600px) {
+                  margin-bottom: 0;
+                }
+              `}
+            >
+              (Song ID: {song.id}) {song.title}
+            </span>
             <div>
               <button
                 css={css`
@@ -127,7 +160,13 @@ function SongList() {
 
                   &:hover {
                     background-color: #c62828;
-                    scale: 1.1;
+                    transform: scale(1.1);
+                  }
+
+                  @media (max-width: 600px) {
+                    width: 100%;
+                    margin-bottom: 0.5rem;
+                    padding: 0.5rem;
                   }
                 `}
                 onClick={() => {
@@ -150,6 +189,10 @@ function SongList() {
                   border: none;
                   cursor: pointer;
                   margin-left: 10px;
+
+                  @media (max-width: 600px) {
+                    margin-left: 0;
+                  }
                 `}
                 onClick={() => handleFavorite(song)}
               >
@@ -176,6 +219,10 @@ function SongList() {
           display: flex;
           justify-content: space-between;
           margin-top: 1rem;
+
+          @media (max-width: 600px) {
+            flex-direction: column;
+          }
         `}
       >
         <button
@@ -196,6 +243,12 @@ function SongList() {
             &:disabled {
               background-color: #b0bec5;
               cursor: not-allowed;
+            }
+
+            @media (max-width: 600px) {
+              width: 100%;
+              margin-bottom: 0.5rem;
+              padding: 0.5rem;
             }
           `}
         >
@@ -219,6 +272,11 @@ function SongList() {
             &:disabled {
               background-color: #b0bec5;
               cursor: not-allowed;
+            }
+
+            @media (max-width: 600px) {
+              width: 100%;
+              padding: 0.5rem;
             }
           `}
         >
