@@ -24,8 +24,8 @@ The Music Playlist Manager is a web application designed to manage a collection 
 Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/music-playlist-manager.git
-cd music-playlist-manager
+git clone https://github.com/firaolteshale21/music-app
+cd music-app
 ```
 
 Install dependencies:
