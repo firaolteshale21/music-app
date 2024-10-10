@@ -5,6 +5,23 @@ export const fetchSongs = createAction("songs/fetchSongs");
 export const fetchSongsSuccess = createAction("songs/fetchSongsSuccess");
 export const fetchSongsFailure = createAction("songs/fetchSongsFailure");
 
+// Additional action creators for async operations related to add, update, and delete
+export const addSongRequest = createAction("songs/addSongRequest");
+export const addSongSuccess = createAction("songs/addSongSuccess");
+export const addSongFailure = createAction("songs/addSongFailure");
+
+export const updateSongRequest = createAction("songs/updateSongRequest");
+export const updateSongSuccess = createAction("songs/updateSongSuccess");
+export const updateSongFailure = createAction("songs/updateSongFailure");
+
+export const deleteSongRequest = createAction("songs/deleteSongRequest");
+export const deleteSongSuccess = createAction("songs/deleteSongSuccess");
+export const deleteSongFailure = createAction("songs/deleteSongFailure");
+
+// New action creators for add and remove song
+export const addSong = createAction("songs/addSong");
+export const removeSong = createAction("songs/removeSong");
+
 const songsSlice = createSlice({
   name: "songs",
   initialState: {
@@ -16,41 +33,6 @@ const songsSlice = createSlice({
     favorites: [], // Array to store favorite song IDs
   },
   reducers: {
-    fetchSongs: (state) => {
-      state.loading = true;
-    },
-    fetchSongsSuccess: (state, action) => {
-      state.loading = false;
-      state.list = action.payload.songs;
-      state.totalPages = action.payload.totalPages;
-    },
-    fetchSongsFailure: (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-    },
-    addSongRequest: (state) => {
-      state.loading = true;
-    },
-    addSongSuccess: (state, action) => {
-      state.loading = false;
-      state.list.push(action.payload);
-    },
-    addSongFailure: (state, action) => {
-      state.loading = false;
-      state.error = action.payload;
-    },
-    updateSongRequest: (state) => {
-      state.loading = true;
-    },
-    updateSongSuccess: (state, action) => {
-      state.loading = false;
-      const index = state.list.findIndex(
-        (song) => song.id === action.payload.id
-      );
-      if (index !== -1) {
-        state.list[index] = action.payload;
-      }
-    },
     addFavorite: (state, action) => {
       const songId = action.payload; // Expecting just the song ID
       if (!state.favorites.includes(songId)) {
@@ -67,6 +49,7 @@ const songsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // Fetch Songs
       .addCase(fetchSongs, (state) => {
         state.loading = true;
       })
@@ -78,19 +61,59 @@ const songsSlice = createSlice({
       .addCase(fetchSongsFailure, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      // Add Song
+      .addCase(addSongRequest, (state) => {
+        state.loading = true;
+      })
+      .addCase(addSongSuccess, (state, action) => {
+        state.loading = false;
+        state.list.push(action.payload);
+      })
+      .addCase(addSongFailure, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Update Song
+      .addCase(updateSongRequest, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateSongSuccess, (state, action) => {
+        state.loading = false;
+        const index = state.list.findIndex(
+          (song) => song.id === action.payload.id
+        );
+        if (index !== -1) {
+          state.list[index] = action.payload;
+        }
+      })
+      .addCase(updateSongFailure, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Delete Song
+      .addCase(deleteSongRequest, (state) => {
+        state.loading = true;
+      })
+      .addCase(deleteSongSuccess, (state, action) => {
+        state.loading = false;
+        state.list = state.list.filter((song) => song.id !== action.payload);
+      })
+      .addCase(deleteSongFailure, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // Direct add/remove Song actions for non-async scenarios
+      .addCase(addSong, (state, action) => {
+        state.list.push(action.payload);
+      })
+      .addCase(removeSong, (state, action) => {
+        state.list = state.list.filter((song) => song.id !== action.payload);
       });
   },
 });
 
-export const {
-  addSong,
-  removeSong,
-  addFavorite,
-  removeFavorite,
-  setCurrentPage,
-  updateSong,
-  updateSongRequest,
-} = songsSlice.actions;
+export const { addFavorite, removeFavorite, setCurrentPage } =
+  songsSlice.actions;
 
 export default songsSlice.reducer;
-
