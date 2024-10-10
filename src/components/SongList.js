@@ -1,7 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import React, { useEffect } from "react";
-import { fetchSongs, removeSong } from "../features/songs/songsSlice";
-
+import { fetchSongs, deleteSongRequest  } from "../features/songs/songsSlice";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import { setCurrentPage } from "../features/songs/songsSlice";
@@ -31,8 +30,8 @@ function SongList() {
       >
         <LoadingSpinner />
       </h2>
-     
     );
+
   if (songs.length === 0)
     return (
       <h2
@@ -69,8 +68,8 @@ function SongList() {
           src={require("../images/mLogo.png")}
           alt="Music note"
           css={css`
-            width: 34px;
-            height: 34px;
+            width: 4px;
+            height: 24px;
             margin-right: 10px;
             filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
             opacity: 0.8;
@@ -115,15 +114,8 @@ function SongList() {
                 }
               `}
               onClick={() => {
-                fetch(
-                  `https://jsonplaceholder.typicode.com/albums/${song.id}`,
-                  {
-                    method: "DELETE",
-                  }
-                ).then(() => {
-                  dispatch(removeSong(song.id));
-                  toast.success("Song removed successfully!");
-                });
+                dispatch(deleteSongRequest (song.id)); // Updated to use Redux-Saga
+                toast.success("Song removed successfully!");
               }}
             >
               Remove

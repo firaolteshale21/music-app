@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateSong } from "../features/songs/songsSlice";
+import { updateSongRequest } from "../features/songs/songsSlice"; // Ensure you have the correct import
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import { toast } from "react-toastify";
@@ -58,12 +58,12 @@ function UpdateSongForm() {
     }
 
     if (!Number.isInteger(+updateInfo.id)) {
-      toast.warning("ID Must be Valid Integer.");;
+      toast.warning("ID must be a valid integer.");
       return;
     }
 
     if (updateInfo.title.length < 3) {
-    toast.warning("Title must be at least 3 characters long."); 
+      toast.warning("Title must be at least 3 characters long.");
       return;
     }
 
@@ -73,7 +73,7 @@ function UpdateSongForm() {
     if (localSong) {
       // Update the song's title locally
       const updatedSong = { ...localSong, title: updateInfo.title };
-      dispatch(updateSong(updatedSong));
+      dispatch(updateSongRequest(updatedSong)); // Dispatch the update action
       setUpdateInfo({ id: "", title: "" }); // Reset input fields
       toast.success("Song updated successfully!"); // Show success toast
     } else {
@@ -91,9 +91,7 @@ function UpdateSongForm() {
 
       // Update the song's properties locally
       const updatedSong = { ...existingSong, title: updateInfo.title };
-
-      // Dispatch an action to update the song in the Redux store
-      dispatch(updateSong(updatedSong));
+      dispatch(updateSongRequest(updatedSong)); // Dispatch the update action
       setUpdateInfo({ id: "", title: "" }); // Reset input fields
       toast.success("Song updated successfully!"); // Show success toast
     }
