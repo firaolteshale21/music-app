@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addSongRequest } from "../features/songs/songsSlice"; // Updated action
+import { addSong } from "../features/songs/songsSlice";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import "react-toastify/dist/ReactToastify.css";
@@ -10,29 +10,36 @@ function AddSongForm() {
   const [newSongTitle, setNewSongTitle] = useState("");
   const dispatch = useDispatch();
 
-  const handleAddSong = () => {
+  const handleAddSong = async () => {
     if (!newSongTitle) {
-      toast.error("Please enter a song title."); // Show error toast
+      toast.error("Please enter a song title.");
       return;
     }
 
     const newSong = {
-      // Generate a unique ID using math random value between 101 - 999
-      id: Math.floor(Math.random() * 900) + 101, // Use Math.floor to round down the random number
+      id: Math.floor(Math.random() * 900) + 101,
       title: newSongTitle,
     };
 
-    // Dispatch the saga request instead of direct add action
-    dispatch(addSongRequest(newSong));
-    setNewSongTitle(""); // Reset input field
-    toast.success("Song added successfully!"); // Show success toast
+    const response = await fetch("https://jsonplaceholder.typicode.com/posts", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newSong),
+    });
+
+    const data = await response.json();
+    data.id = newSong.id;
+
+    dispatch(addSong(data));
+    setNewSongTitle("");
+    toast.success("Song added successfully!");
   };
 
-  // Adding form validation
   const isFormValid = newSongTitle.trim() !== "";
   const buttonDisabled = !isFormValid;
 
-  // Adding form submission with Enter key
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       handleAddSong();
@@ -45,9 +52,25 @@ function AddSongForm() {
         display: flex;
         flex-direction: column;
         margin-bottom: 2rem;
+        padding: 1rem;
+
+        @media (max-width: 600px) {
+          padding: 0.5rem;
+          margin-bottom: 1rem;
+        }
       `}
     >
-      <h2>Add Song</h2>
+      <h2
+        css={css`
+          font-size: 1.5rem;
+
+          @media (max-width: 600px) {
+            font-size: 1.25rem;
+          }
+        `}
+      >
+        Add Song
+      </h2>
       <input
         type="text"
         value={newSongTitle}
@@ -61,22 +84,34 @@ function AddSongForm() {
           border: 1px solid #333;
           background-color: #1b1b1b;
           color: white;
+          font-size: 1rem;
+
+          @media (max-width: 600px) {
+            padding: 0.4rem;
+            font-size: 0.9rem;
+          }
         `}
       />
       <button
         css={css`
-          background-color: ${buttonDisabled ? "#b0bec5" : "#1db954"};
+          background-color: #1db954;
           color: white;
           border: none;
           padding: 0.5rem 1rem;
           border-radius: 8px;
-          cursor: ${buttonDisabled ? "not-allowed" : "pointer"};
+          cursor: pointer;
+          disabled: ${buttonDisabled};
+
           &:hover {
-            scale: ${buttonDisabled ? "1" : "1.05"};
+            scale: 1.05;
+          }
+
+          @media (max-width: 600px) {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.9rem;
           }
         `}
         onClick={handleAddSong}
-        disabled={buttonDisabled}
       >
         Add Song
       </button>
@@ -85,3 +120,4 @@ function AddSongForm() {
 }
 
 export default AddSongForm;
+  

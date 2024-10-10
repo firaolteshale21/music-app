@@ -1,54 +1,57 @@
-import React from "react";
 import { useSelector, useDispatch } from "react-redux";
+import React from "react";
 import { removeFavorite } from "../features/songs/songsSlice";
 
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import { toast } from "react-toastify";
 
 function FavoriteSongs() {
-  const favoriteSongs = useSelector((state) => state.songs.favorites);
+  const favorites = useSelector((state) => state.songs.favorites);
+  const songs = useSelector((state) => state.songs.list); // Get all songs
   const dispatch = useDispatch();
+
+  // Get favorite songs by filtering the full list based on favorite IDs
+  const favoriteSongs = songs.filter((song) => favorites.includes(song.id));
 
   if (favoriteSongs.length === 0) {
     return (
-      <h2
-        css={css`
-          color: red;
-        `}
-      >
-        No favorite songs added.
+      <h2>
+        No favorite songs.
+        <img
+          src={require("../images/StarBeforePress.png")}
+          alt="Favorite"
+          css={css`
+            width: 24px;
+            height: 24px;
+            filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
+            transform: translateY(3.2px);
+          `}
+        />
       </h2>
     );
-  }
 
-  const handleRemoveFavorite = (songId) => {
-    dispatch(removeFavorite(songId));
-    toast.success("Removed from favorites!");
-  };
+  }
 
   return (
     <div>
-      <h1
+      <h2
         css={css`
-          color: lightgreen;
-          display: flex;
-          align-items: center;
+          color: lightblue;
         `}
       >
+        Favorite Songs 
         <img
-          src={require("../images/StarBeforePress.png")}
-          alt="Favorite icon"
+          src={require("../images/AfterPress.png")}
+          alt="Favorite"
           css={css`
-            width: 34px;
-            height: 34px;
-            margin-right: 10px;
+            width: 24px;
+            height: 24px;
             filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
-            opacity: 0.8;
+            transform: translateY(3.2px);
           `}
         />
-        Favorite Songs
-      </h1>
+      </h2>
+
       <ul
         css={css`
           list-style: none;
@@ -58,7 +61,7 @@ function FavoriteSongs() {
       >
         {favoriteSongs.map((song) => (
           <li
-            key={song.id}
+            key={song.id} // Ensure each list item has a unique key
             css={css`
               background-color: #1b1b1b;
               padding: 1rem;
@@ -70,7 +73,7 @@ function FavoriteSongs() {
               color: white;
             `}
           >
-            (Song ID: {song.id}) {song.title}
+            {song.title}
             <button
               css={css`
                 background-color: #d32f2f;
@@ -85,7 +88,9 @@ function FavoriteSongs() {
                   scale: 1.1;
                 }
               `}
-              onClick={() => handleRemoveFavorite(song.id)}
+              onClick={() => {
+                dispatch(removeFavorite(song.id)); // Correct dispatch usage
+              }}
             >
               Remove
             </button>
