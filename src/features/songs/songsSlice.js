@@ -89,6 +89,7 @@ export const {
   removeFavorite,
   setCurrentPage,
   updateSong,
+  updateSongRequest,
 } = songsSlice.actions;
 
 export default songsSlice.reducer;
