@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateSongRequest } from "../features/songs/songsSlice"; // Ensure you have the correct import
+import { updateSongRequest } from "../features/songs/songsSlice";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import { toast } from "react-toastify";
@@ -49,9 +49,9 @@ const buttonStyle = css`
 function UpdateSongForm() {
   const [updateInfo, setUpdateInfo] = useState({ id: "", title: "" });
   const dispatch = useDispatch();
-  const songs = useSelector((state) => state.songs.list); // Access the list of songs from Redux
+  const songs = useSelector((state) => state.songs.list);
 
-  const handleUpdateSong = async () => {
+  const handleUpdateSong = () => {
     if (!updateInfo.id || !updateInfo.title) {
       toast.warning("Please enter both ID and title.");
       return;
@@ -67,35 +67,16 @@ function UpdateSongForm() {
       return;
     }
 
-    // Check if the song exists locally in Redux
     const localSong = songs.find((song) => song.id === +updateInfo.id);
 
     if (localSong) {
-      // Update the song's title locally
       const updatedSong = { ...localSong, title: updateInfo.title };
-      dispatch(updateSongRequest(updatedSong)); // Dispatch the update action
-      setUpdateInfo({ id: "", title: "" }); // Reset input fields
-      toast.success("Song updated successfully!"); // Show success toast
+      dispatch(updateSongRequest(updatedSong));
+      setUpdateInfo({ id: "", title: "" });
+      toast.success("Song update requested!");
     } else {
-      // Fetch the song from the API if it doesn't exist locally
-      const response = await fetch(
-        `https://jsonplaceholder.typicode.com/posts/${updateInfo.id}`
-      );
-
-      if (!response.ok) {
-        alert("Failed to fetch the song. Please check the song ID.");
-        return;
-      }
-
-      const existingSong = await response.json();
-
-      // Update the song's properties locally
-      const updatedSong = { ...existingSong, title: updateInfo.title };
-      dispatch(updateSongRequest(updatedSong)); // Dispatch the update action
-      setUpdateInfo({ id: "", title: "" }); // Reset input fields
-      toast.success("Song updated successfully!"); // Show success toast
+      toast.error("Song with this ID does not exist locally.");
     }
-    
   };
 
   return (

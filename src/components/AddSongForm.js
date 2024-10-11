@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addSong } from "../features/songs/songsSlice";
+import { addSongRequest } from "../features/songs/songsSlice";
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import "react-toastify/dist/ReactToastify.css";
@@ -10,35 +10,23 @@ function AddSongForm() {
   const [newSongTitle, setNewSongTitle] = useState("");
   const dispatch = useDispatch();
 
-  const handleAddSong = async () => {
+  const handleAddSong = () => {
     if (!newSongTitle) {
       toast.error("Please enter a song title.");
       return;
     }
 
     const newSong = {
-      id: Math.floor(Math.random() * 900) + 101,
+      id: Math.floor(Math.random() * 900) + 101, // Temp ID
       title: newSongTitle,
     };
 
-    const response = await fetch("https://jsonplaceholder.typicode.com/posts", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newSong),
-    });
-
-    const data = await response.json();
-    data.id = newSong.id;
-
-    dispatch(addSong(data));
+    dispatch(addSongRequest(newSong)); // Dispatch action to request song addition
     setNewSongTitle("");
-    toast.success("Song added successfully!");
+    toast.success("Song addition requested!");
   };
 
   const isFormValid = newSongTitle.trim() !== "";
-  const buttonDisabled = !isFormValid;
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -100,7 +88,6 @@ function AddSongForm() {
           padding: 0.5rem 1rem;
           border-radius: 8px;
           cursor: pointer;
-          disabled: ${buttonDisabled};
 
           &:hover {
             scale: 1.05;
@@ -112,6 +99,7 @@ function AddSongForm() {
           }
         `}
         onClick={handleAddSong}
+        disabled={!isFormValid}
       >
         Add Song
       </button>
@@ -120,4 +108,3 @@ function AddSongForm() {
 }
 
 export default AddSongForm;
-  
