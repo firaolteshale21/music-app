@@ -2,14 +2,13 @@ import { useSelector, useDispatch } from "react-redux";
 import React, { useEffect } from "react";
 import {
   fetchSongs,
-  removeSong,
+  deleteSongRequest,
   addFavorite,
   removeFavorite,
+  setCurrentPage,
 } from "../features/songs/songsSlice";
-
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import { setCurrentPage } from "../features/songs/songsSlice";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LoadingSpinner from "./LoadingSpinner";
@@ -48,6 +47,10 @@ function SongList() {
       dispatch(addFavorite(song.id));
       toast.success("Song added to favorites!");
     }
+  };
+
+  const handleRemoveSong = (songId) => {
+    dispatch(deleteSongRequest(songId));
   };
 
   if (loading)
@@ -169,17 +172,7 @@ function SongList() {
                     padding: 0.5rem;
                   }
                 `}
-                onClick={() => {
-                  fetch(
-                    `https://jsonplaceholder.typicode.com/albums/${song.id}`,
-                    {
-                      method: "DELETE",
-                    }
-                  ).then(() => {
-                    dispatch(removeSong(song.id));
-                    toast.success("Song removed successfully!");
-                  });
-                }}
+                onClick={() => handleRemoveSong(song.id)}
               >
                 Remove
               </button>
